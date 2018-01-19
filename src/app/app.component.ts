@@ -44,7 +44,7 @@ export class AppComponent implements AfterViewInit {
       });
       this.map.data.setStyle(function(feature) {
         const lon = feature.getProperty('NUMBER_LONELY');
-        const value = Math.round(255 * (lon / 10);
+        const value = Math.round(255 * (lon / 10));
         const color = 'rgb(' + value + ',0,' + value + ')';
         console.log(color);
         return {
