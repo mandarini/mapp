@@ -31,7 +31,9 @@ export const styledMap =
     {
       featureType: 'poi',
       elementType: 'labels.text.fill',
-      stylers: [{color: '#111111'}]
+      stylers: [
+        {color: '#111111'},
+        { visibility: 'simplified' }]
     },
     {
       featureType: 'poi.park',
@@ -42,6 +44,10 @@ export const styledMap =
       featureType: 'poi.park',
       elementType: 'labels.text.fill',
       stylers: [{color: '#111111'}]
+    },
+    {
+      featureType: 'poi.business',
+      stylers: [{visibility: 'off'}]
     },
     {
       featureType: 'road',
