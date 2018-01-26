@@ -16,7 +16,8 @@ export class AppComponent implements AfterViewInit {
   @ViewChild('manch') manchester: ElementRef;
 
   private map: any;
-  results: string[];
+  lettings: string[];
+  masts: string[];
 
   constructor(private gapi: GmapService, private http: HttpClient) {
   }
@@ -75,21 +76,19 @@ export class AppComponent implements AfterViewInit {
       });
 
       this.http.get('assets/letting.json').subscribe(data => {
-        this.results = data['data'];
-        console.log(this.results[0]);
-        console.log(this.results[0][15]); // total bidders
-        console.log(this.results[0][16]); // successful bid points
-        console.log(this.results[0][23]); // longitude
-        console.log(this.results[0][24]); // latitude
+        this.lettings = data['data'];
+        // console.log(this.lettings[0]);
+        // console.log(this.lettings[0][15]); // total bidders
+        // console.log(this.lettings[0][16]); // successful bid points
+        // console.log(this.lettings[0][23]); // longitude
+        // console.log(this.lettings[0][24]); // latitude
         const heatmapData = [];
-        this.results.map(x => {
+        this.lettings.map(x => {
           heatmapData.push({
             location: new maps.LatLng(x[24], x[23]),
             weight: parseInt(x[15], 10)
           });
         });
-        console.log(heatmapData);
-
         const heatmap = new maps.visualization.HeatmapLayer({
           data: heatmapData
         });
@@ -98,6 +97,31 @@ export class AppComponent implements AfterViewInit {
         heatmap.set('radius', 70);
         heatmap.set('opacity', 1);
         heatmap.setMap(this.map);
+      });
+
+       const antenna = new maps.MarkerImage('assets/antenna.png',
+        null, /* size is determined at runtime */
+        null, /* origin is 0,0 */
+        null, /* anchor is bottom center of the scaled image */
+        new maps.Size(42, 68)
+      );
+
+      this.http.get('assets/masts.json').subscribe(data => {
+        this.masts = data['data'];
+        // console.log(this.antennas);
+        console.log(this.masts[0][17]); // longitude
+        console.log(this.masts[0][18]); // latitude
+
+        this.masts.map(x => {
+          new maps.Marker({
+            position: new maps.LatLng(x[18], x[17]),
+            icon: antenna,
+            size: new maps.Size(50,50),
+            map: this.map
+          });
+        });
+
+
       });
     });
   }
