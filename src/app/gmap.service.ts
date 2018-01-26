@@ -4,7 +4,7 @@ const your_API_key = 'AIzaSyAwVnwE1bEZf_Bkk_pSkGM0XlBSXJocVUY';
 /**
  Here is the google maps url link. You can also add libraries (places, drawing, etc) as URL params after the key
  */
-const url = 'https://maps.googleapis.com/maps/api/js?key=' + your_API_key;
+const url = 'https://maps.googleapis.com/maps/api/js?key=' + your_API_key + '&libraries=visualization';
 
 @Injectable()
 export class GmapService {
