@@ -30,6 +30,12 @@ export class OlMapComponent implements AfterViewInit  {
 
     /**
      * Init map api [ol]
+     *
+     * We can use the ol object while we are here only! :)
+     *
+     * Outside of here, we can use the map and anything else that is global,
+     * thanks to angular
+     * 
      */
     this.olapi.loadScript(() => {
       console.log('loaded');
