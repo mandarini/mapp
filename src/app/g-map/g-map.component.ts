@@ -122,7 +122,7 @@ export class GMapComponent implements AfterViewInit  {
           new maps.Marker({
             position: new maps.LatLng(x[18], x[17]),
             icon: antenna,
-            size: new maps.Size(50,50),
+            size: new maps.Size(30, 30),
             map: this.map
           });
         });
