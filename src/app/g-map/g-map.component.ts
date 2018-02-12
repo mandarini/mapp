@@ -13,14 +13,22 @@ import { customGradient } from '../../assets/mapStylingMaterial/gradient';
 export class GMapComponent implements AfterViewInit  {
 
   @ViewChild('mapElement') mapElement: ElementRef;
-  @ViewChild('lon') london: ElementRef;
-  @ViewChild('manch') manchester: ElementRef;
 
   private map: any;
+  private coords: any;
   lettings: string[];
   masts: string[];
 
   constructor(private gapi: GmapService, private http: HttpClient) {
+  }
+
+  city(city) {
+   if (city === 'lon') {
+     this.map.setCenter(this.coords(51.561638, -0.14));
+   }
+   if (city === 'man') {
+     this.map.setCenter(this.coords(53.52476717517185, -2.5434842249308414));
+   }
   }
 
   ngAfterViewInit(): void {
@@ -34,6 +42,10 @@ export class GMapComponent implements AfterViewInit  {
       const loc = new maps.LatLng(51.561638, -0.14);
 
       const styledMapType = new maps.StyledMapType(styledMap, {name: 'Dark Map'});
+
+      this.coords = function (x, y) {
+        return new maps.LatLng(x, y);
+      };
 
       this.map = new maps.Map(this.mapElement.nativeElement, {
         zoom: 11,
@@ -54,13 +66,6 @@ export class GMapComponent implements AfterViewInit  {
 
       const locControl = document.getElementById('location-buttons');
       this.map.controls[maps.ControlPosition.TOP_CENTER].push(locControl);
-
-      this.london.nativeElement.addEventListener('click', () => {
-        this.map.setCenter(new maps.LatLng(51.561638, -0.14));
-      });
-      this.manchester.nativeElement.addEventListener('click', () => {
-        this.map.setCenter(new maps.LatLng(53.52476717517185, -2.5434842249308414));
-      });
 
       this.map.data.loadGeoJson('assets/lonely.geojson');
       this.map.data.addListener('mouseover', function(event) {
