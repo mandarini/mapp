@@ -35,18 +35,20 @@ export class OlMapComponent implements AfterViewInit  {
      *
      * Outside of here, we can use the map and anything else that is global,
      * thanks to angular
-     * 
+     *
      */
-    this.olapi.loadScript(() => {
-      console.log('loaded');
 
-      let raster = new ol.layer.Tile({
+    this.olapi.loadScript(() => {
+
+      const ol = window['ol'];
+
+      const raster = new ol.layer.Tile({
         source: new ol.source.OSM()
       });
 
-      let source = new ol.source.Vector({wrapX: false});
+      const source = new ol.source.Vector({wrapX: false});
 
-      let vector = new ol.layer.Vector({
+      const vector = new ol.layer.Vector({
         source: source
       });
 
@@ -65,8 +67,6 @@ export class OlMapComponent implements AfterViewInit  {
       });
       this.map.addInteraction(this.draw);
 
-    };
-
+    });
   }
-
 }
