@@ -8,11 +8,11 @@ export class OlmapService {
   constructor() {}
 
   public loadScript(c): void {
-    if (!document.getElementById('olmap')) {
+    if (!document.getElementById('omap')) {
       const script = document.createElement('script');
       script.type = 'text/javascript';
       script.src = url;
-      script.id = 'olmap';
+      script.id = 'omap';
       if (c) {
         script.addEventListener('load', function (e) {
           c(null, e);
@@ -21,5 +21,6 @@ export class OlmapService {
       document.head.appendChild(script);
     }
   }
+
 
 }
