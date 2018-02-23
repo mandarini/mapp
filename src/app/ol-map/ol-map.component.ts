@@ -4,7 +4,7 @@ import {OlmapService} from '../olmap.service';
 @Component({
   selector: 'app-ol-map',
   templateUrl: './ol-map.component.html',
-  styleUrls: ['./ol-map.component.css']
+  styleUrls: ['./ol-map.component.css', './ol.css']
 })
 
 

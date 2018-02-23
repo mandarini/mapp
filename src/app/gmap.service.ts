@@ -20,6 +20,7 @@ export class GmapService {
       const script = document.createElement('script');
       script.type = 'text/javascript';
       script.src = url;
+      script.async = true;
       script.id = 'gmap';
       if (c) {
         script.addEventListener('load', function (e) {
