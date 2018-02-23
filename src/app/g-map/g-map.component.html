@@ -1,6 +1,8 @@
 <div id="location-buttons">
   <button (click)="city('lon')">London</button>
   <button (click)="city('man')">Manchester</button>
+  <button (click)="changeType('dark')">Lights off</button>
+  <button (click)="changeType('plain')">Light on</button>
 </div>
 <div style="text-align:center">
   <div class="map" #mapElement></div>

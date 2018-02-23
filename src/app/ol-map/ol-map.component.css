@@ -6,6 +6,7 @@
 
 button {
   background-color: #625f9c;
+  text-transform: uppercase;
   border: 1px solid #625f9c;
   border-radius: 3px;
   color: white;

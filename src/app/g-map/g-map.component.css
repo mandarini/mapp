@@ -7,6 +7,7 @@ button {
   background-color: #625f9c;
   border: 1px solid #625f9c;
   border-radius: 3px;
+  text-transform: uppercase;
   color: white;
   width: auto;
   padding: 7px 15px;

@@ -34,6 +34,14 @@ export class GMapComponent implements AfterViewInit  {
    }
   }
 
+  changeType(type) {
+   if (type === 'dark') {
+     this.map.setMapTypeId('dark_map');
+   } else {
+     this.map.setMapTypeId('roadmap');
+   }
+  }
+
   ngAfterViewInit(): void {
 
     /**
@@ -44,7 +52,7 @@ export class GMapComponent implements AfterViewInit  {
       console.log(maps);
       const loc = new maps.LatLng(51.561638, -0.14);
 
-      const styledMapType = new maps.StyledMapType(styledMap, {name: 'Dark Map'});
+      const darkmap = new maps.StyledMapType(styledMap, {name: 'Dark Map'});
 
       this.coords = function (x, y) {
         return new maps.LatLng(x, y);
@@ -64,7 +72,7 @@ export class GMapComponent implements AfterViewInit  {
           position: maps.ControlPosition.RIGHT_BOTTOM
         }
       });
-      this.map.mapTypes.set('dark_map', styledMapType);
+      this.map.mapTypes.set('dark_map', darkmap);
       this.map.setMapTypeId('dark_map');
 
       const locControl = document.getElementById('location-buttons');
