@@ -1,0 +1,19 @@
+a {
+  background-color: #9c4d4f;
+  border: 1px solid #9c4d4f;
+  border-radius: 3px;
+  color: white;
+  width: auto;
+  padding: 7px 15px;
+  text-decoration: none;
+}
+
+button {
+  background-color: #625f9c;
+  border: 1px solid #625f9c;
+  border-radius: 3px;
+  color: white;
+  width: auto;
+  padding: 7px 15px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}

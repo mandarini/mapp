@@ -1,3 +1,10 @@
-<button (click)="nowhat()">stop interaction mode</button>
-<button (click)="addAgain()">add interaction mode</button>
+<button (click)="rotate('cw')">↻</button>
+<button (click)="rotate('ccw')">↺</button>
+<button (click)="snap(true)">snap</button>
+<button (click)="snap(false)">unsnap</button>
+<button (click)="addAgain('stop')">stop interaction mode</button>
+<button (click)="addAgain('line')">line</button>
+<button (click)="addAgain('point')">point</button>
+<button (click)="setTiles('stamen')">use stamen tiles</button>
+<button (click)="setTiles('osm')">use OSM tiles</button>
 <div class="map" id="olmap"></div>

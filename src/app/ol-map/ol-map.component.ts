@@ -14,18 +14,58 @@ export class OlMapComponent implements AfterViewInit  {
   @ViewChild('olmapElement') olmapElement: ElementRef;
 
   private map: any;
-  private draw: any;
-
+  private point: any;
+  private line: any;
+  private stamen: any;
+  private snapit: any;
+  private osm: any;
+  private view: any;
 
   constructor(private load: ScriptLoadService) {
   }
 
-  nowhat() {
-    this.map.removeInteraction(this.draw);
+  rotate(w) {
+    console.log(w);
+    if (w === 'ccw') {
+      this.view.animate({
+        rotation: this.view.getRotation() - Math.PI / 2
+      });
+    } else {
+      this.view.animate({
+        rotation: this.view.getRotation() + Math.PI / 2
+      });
+    }
   }
 
-  addAgain() {
-    this.map.addInteraction(this.draw);
+  snap(type) {
+    if (type) {
+      this.map.addInteraction(this.snapit);
+    } else {
+      this.map.removeInteraction(this.snapit);
+    }
+  }
+
+  addAgain(type) {
+    if (type === 'stop') {
+      this.map.removeInteraction(this.point);
+      this.map.removeInteraction(this.line);
+    } else {
+      if (type === 'point') {
+        this.map.addInteraction(this.point);
+      }
+      if (type === 'line') {
+        this.map.addInteraction(this.line);
+      }
+    }
+  }
+
+  setTiles(tiles) {
+    if (tiles === 'stamen') {
+      this.map.setLayerGroup(this.stamen);
+    } else {
+      this.map.setLayerGroup(this.osm);
+
+    }
   }
 
   ngAfterViewInit(): void {
@@ -44,8 +84,14 @@ export class OlMapComponent implements AfterViewInit  {
 
       const ol = window['ol'];
 
-      const raster = new ol.layer.Tile({
+      this.osm = new ol.layer.Tile({
         source: new ol.source.OSM()
+      });
+
+      this.stamen = new ol.layer.Tile({
+        source: new ol.source.Stamen({
+          layer: 'toner'
+        })
       });
 
       const source = new ol.source.Vector({wrapX: false});
@@ -54,21 +100,32 @@ export class OlMapComponent implements AfterViewInit  {
         source: source
       });
 
-      this.map = new ol.Map({
-        target: 'olmap',
-        layers: [raster, vector],
-        view: new ol.View({
-          center: ol.proj.fromLonLat([23.82, 37.41]),
-          zoom: 6
-        })
+      this.view =  new ol.View({
+        center: ol.proj.fromLonLat([23.82, 37.41]),
+        zoom: 6
       });
 
-      this.draw = new ol.interaction.Draw({
+      this.map = new ol.Map({
+        target: 'olmap',
+        layers: [this.osm, vector],
+        view: this.view
+      });
+
+      this.point = new ol.interaction.Draw({
             source: source,
             type: 'Point'
       });
-      this.map.addInteraction(this.draw);
+      this.line = new ol.interaction.Draw({
+        source: source,
+        type: 'LineString'
+      });
+      this.map.addInteraction(this.point);
 
+      this.snapit = new ol.interaction.Snap({
+        source: vector.getSource(),
+        pixelTolerance: 30
+      });
+      this.map.addInteraction(this.snapit);
     });
   }
 }
