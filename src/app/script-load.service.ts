@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 
-const url = 'https://openlayers.org/en/v4.6.4/build/ol.js';
-
 @Injectable()
-export class OlmapService {
+export class ScriptLoadService {
 
   constructor() {}
 
-  public loadScript(c): void {
+  public loadScript(url, c): void {
     if (!document.getElementById('omap')) {
       const script = document.createElement('script');
       script.type = 'text/javascript';
@@ -21,6 +19,7 @@ export class OlmapService {
       document.head.appendChild(script);
     }
   }
+
 
 
 }

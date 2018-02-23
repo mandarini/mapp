@@ -1,7 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { GmapService } from './gmap.service';
-import { OlmapService } from './olmap.service';
+import { ScriptLoadService } from './script-load.service';
 import {HttpClientModule} from '@angular/common/http';
 
 import { AppComponent } from './app.component';
@@ -21,7 +20,7 @@ import { GMapComponent } from './g-map/g-map.component';
     HttpClientModule,
     AppRoutingModule
   ],
-  providers: [GmapService, OlmapService],
+  providers: [ScriptLoadService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

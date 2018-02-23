@@ -1,12 +1,13 @@
-import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
-import {OlmapService} from '../olmap.service';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { ScriptLoadService } from '../script-load.service';
+
+const url = 'https://openlayers.org/en/v4.6.4/build/ol.js';
 
 @Component({
   selector: 'app-ol-map',
   templateUrl: './ol-map.component.html',
   styleUrls: ['./ol-map.component.css', './ol.css']
 })
-
 
 export class OlMapComponent implements AfterViewInit  {
 
@@ -15,7 +16,8 @@ export class OlMapComponent implements AfterViewInit  {
   private map: any;
   private draw: any;
 
-  constructor(private olapi: OlmapService) {
+
+  constructor(private load: ScriptLoadService) {
   }
 
   nowhat() {
@@ -38,7 +40,7 @@ export class OlMapComponent implements AfterViewInit  {
      *
      */
 
-    this.olapi.loadScript(() => {
+    this.load.loadScript(url, () => {
 
       const ol = window['ol'];
 

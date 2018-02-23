@@ -1,9 +1,12 @@
 import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import { GmapService } from '../gmap.service';
+import { ScriptLoadService } from '../script-load.service';
 import { HttpClient } from '@angular/common/http';
 import { mapNumber } from '../../assets/functions/mapNumber';
 import { styledMap } from '../../assets/mapStylingMaterial/styledMap';
 import { customGradient } from '../../assets/mapStylingMaterial/gradient';
+
+const your_API_key = 'AIzaSyAwVnwE1bEZf_Bkk_pSkGM0XlBSXJocVUY';
+const url = 'https://maps.googleapis.com/maps/api/js?key=' + your_API_key + '&libraries=visualization';
 
 @Component({
   selector: 'app-g-map',
@@ -19,7 +22,7 @@ export class GMapComponent implements AfterViewInit  {
   lettings: string[];
   masts: string[];
 
-  constructor(private gapi: GmapService, private http: HttpClient) {
+  constructor(private load: ScriptLoadService, private http: HttpClient) {
   }
 
   city(city) {
@@ -36,7 +39,7 @@ export class GMapComponent implements AfterViewInit  {
     /**
      * Init map api [google.maps]
      */
-    this.gapi.loadScript(() => {
+    this.load.loadScript(url,() => {
       const maps = window['google']['maps'];
       console.log(maps);
       const loc = new maps.LatLng(51.561638, -0.14);
