@@ -15,7 +15,7 @@ const url = 'https://maps.googleapis.com/maps/api/js?key=' + your_API_key + '&li
 })
 export class GMapComponent implements AfterViewInit  {
 
-  @ViewChild('mapElement') mapElement: ElementRef;
+  @ViewChild('mapElement') mapElm: ElementRef;
 
   private map: any;
   private coords: any;
@@ -58,7 +58,7 @@ export class GMapComponent implements AfterViewInit  {
         return new maps.LatLng(x, y);
       };
 
-      this.map = new maps.Map(this.mapElement.nativeElement, {
+      this.map = new maps.Map(this.mapElm.nativeElement, {
         zoom: 11,
         center: loc,
         scrollwheel: true,
