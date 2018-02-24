@@ -1,24 +1,17 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <title>Mapp</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script type="text/javascript" src="./spaghpages.js"></script>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
+
 <body>
-  <!-- Github Pages hack to allow SPA refresh without receiving 404. -->
-  <script>
-    (function(){
-      var redirect = sessionStorage.redirect;
-      delete sessionStorage.redirect;
-      if (redirect && redirect != location.href) {
-        history.replaceState(null, null, redirect);
-      }
-    })();
-  </script>
-<!-- /Github Pages hack. -->
   <app-root></app-root>
 </body>
+
 </html>
