@@ -80,7 +80,7 @@ export class OlMapComponent implements AfterViewInit  {
      *
      */
 
-    this.load.loadScript(url, () => {
+    this.load.loadScript(url, 'omap', () => {
 
       const ol = window['ol'];
 
