@@ -116,11 +116,11 @@ export class GMapComponent implements AfterViewInit  {
         heatmap.setMap(this.map);
       });
 
-      const antenna = new maps.MarkerImage('assets/antenna.png',
+      const antenna = new maps.MarkerImage('assets/antennabl.png',
         null, /* size is determined at runtime */
         null, /* origin is 0,0 */
         null, /* anchor is bottom center of the scaled image */
-        new maps.Size(42, 68)
+        new maps.Size(25, 40)
       );
 
       this.http.get('assets/masts.json').subscribe(data => {
