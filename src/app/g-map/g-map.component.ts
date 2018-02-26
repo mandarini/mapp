@@ -17,6 +17,7 @@ export class GMapComponent implements AfterViewInit  {
 
   @ViewChild('mapElement') mapElm: ElementRef;
   @ViewChild('info') infoBox: ElementRef;
+  @ViewChild('legend') legend: ElementRef;
 
   private map: any;
   private coords: any;
@@ -81,7 +82,11 @@ export class GMapComponent implements AfterViewInit  {
 
       this.map.data.loadGeoJson('assets/lonely.geojson');
       this.map.data.addListener('mouseover', (function(event) {
+        this.legend.nativeElement.style.display = 'block';
         this.infoBox.nativeElement.innerText = event.feature.getProperty('PREVALENCE');
+      }).bind(this));
+      this.map.data.addListener('mouseout', (function(event) {
+        this.legend.nativeElement.style.display = 'none';
       }).bind(this));
       this.map.data.setStyle(function(feature) {
         const lon = feature.getProperty('PREVALENCE');
@@ -126,7 +131,6 @@ export class GMapComponent implements AfterViewInit  {
 
       this.http.get('assets/masts.json').subscribe(data => {
         this.masts = data['data'];
-        // console.log(this.antennas);
         console.log(this.masts[0][17]); // longitude
         console.log(this.masts[0][18]); // latitude
 
