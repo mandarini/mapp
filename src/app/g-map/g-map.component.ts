@@ -16,8 +16,8 @@ const url = 'https://maps.googleapis.com/maps/api/js?key=' + your_API_key + '&li
 export class GMapComponent implements AfterViewInit  {
 
   @ViewChild('mapElement') mapElm: ElementRef;
-  @ViewChild('info') infoBox: ElementRef;
   @ViewChild('legend') legend: ElementRef;
+  @ViewChild('info') infoBox: ElementRef;
 
   private map: any;
   private coords: any;
@@ -81,11 +81,11 @@ export class GMapComponent implements AfterViewInit  {
       this.map.controls[maps.ControlPosition.TOP_CENTER].push(locControl);
 
       this.map.data.loadGeoJson('assets/lonely.geojson');
-      this.map.data.addListener('mouseover', (function(event) {
+      this.map.data.addListener('mouseover', (function(e) {
         this.legend.nativeElement.style.display = 'block';
-        this.infoBox.nativeElement.innerText = event.feature.getProperty('PREVALENCE');
+        this.infoBox.nativeElement.innerText = e.feature.getProperty('PREVALENCE');
       }).bind(this));
-      this.map.data.addListener('mouseout', (function(event) {
+      this.map.data.addListener('mouseout', (function(e) {
         this.legend.nativeElement.style.display = 'none';
       }).bind(this));
       this.map.data.setStyle(function(feature) {
@@ -123,9 +123,9 @@ export class GMapComponent implements AfterViewInit  {
       });
 
       const antenna = new maps.MarkerImage('assets/antennabl.png',
-        null, /* size is determined at runtime */
-        null, /* origin is 0,0 */
-        null, /* anchor is bottom center of the scaled image */
+        null,
+        null,
+        null,
         new maps.Size(25, 40)
       );
 
@@ -138,7 +138,6 @@ export class GMapComponent implements AfterViewInit  {
           new maps.Marker({
             position: new maps.LatLng(x[18], x[17]),
             icon: antenna,
-            size: new maps.Size(30, 30),
             map: this.map
           });
         });
