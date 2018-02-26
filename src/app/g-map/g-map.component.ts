@@ -16,6 +16,7 @@ const url = 'https://maps.googleapis.com/maps/api/js?key=' + your_API_key + '&li
 export class GMapComponent implements AfterViewInit  {
 
   @ViewChild('mapElement') mapElm: ElementRef;
+  @ViewChild('info') infoBox: ElementRef;
 
   private map: any;
   private coords: any;
@@ -79,9 +80,9 @@ export class GMapComponent implements AfterViewInit  {
       this.map.controls[maps.ControlPosition.TOP_CENTER].push(locControl);
 
       this.map.data.loadGeoJson('assets/lonely.geojson');
-      this.map.data.addListener('mouseover', function(event) {
-        // console.log(event.feature.getProperty('PREVALENCE'));
-      });
+      this.map.data.addListener('mouseover', (function(event) {
+        this.infoBox.nativeElement.innerText = event.feature.getProperty('PREVALENCE');
+      }).bind(this));
       this.map.data.setStyle(function(feature) {
         const lon = feature.getProperty('PREVALENCE');
         const value = 255 - Math.round(mapNumber(lon, 0, 5, 0, 255));
