@@ -46,9 +46,6 @@ export class GMapComponent implements AfterViewInit  {
 
   ngAfterViewInit(): void {
 
-    /**
-     * Init map api [google.maps]
-     */
     this.load.loadScript(url, 'gmap',() => {
       const maps = window['google']['maps'];
       console.log(maps);
@@ -100,11 +97,6 @@ export class GMapComponent implements AfterViewInit  {
 
       this.http.get('assets/letting.json').subscribe(data => {
         this.lettings = data['data'];
-        // console.log(this.lettings[0]);
-        // console.log(this.lettings[0][15]); // total bidders
-        // console.log(this.lettings[0][16]); // successful bid points
-        // console.log(this.lettings[0][23]); // longitude
-        // console.log(this.lettings[0][24]); // latitude
         const heatmapData = [];
         this.lettings.map(x => {
           heatmapData.push({
@@ -138,11 +130,9 @@ export class GMapComponent implements AfterViewInit  {
           new maps.Marker({
             position: new maps.LatLng(x[18], x[17]),
             icon: antenna,
-            map: this.map
+            // map: this.map
           });
         });
-
-
       });
     });
   }
