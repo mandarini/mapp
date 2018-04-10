@@ -1,9 +1,9 @@
-import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import { ScriptLoadService } from '../script-load.service';
-import { HttpClient } from '@angular/common/http';
-import { mapNumber } from '../../assets/functions/mapNumber';
-import { styledMap } from '../../assets/mapStylingMaterial/styledMap';
-import { customGradient } from '../../assets/mapStylingMaterial/gradient';
+import {Component, AfterViewInit, ViewChild, ElementRef} from '@angular/core';
+import {ScriptLoadService} from '../script-load.service';
+import {HttpClient} from '@angular/common/http';
+import {mapNumber} from '../../assets/functions/mapNumber';
+import {styledMap} from '../../assets/mapStylingMaterial/styledMap';
+import {customGradient} from '../../assets/mapStylingMaterial/gradient';
 
 const your_API_key = 'AIzaSyAwVnwE1bEZf_Bkk_pSkGM0XlBSXJocVUY';
 const url = 'https://maps.googleapis.com/maps/api/js?key=' + your_API_key + '&libraries=drawing';
@@ -13,7 +13,7 @@ const url = 'https://maps.googleapis.com/maps/api/js?key=' + your_API_key + '&li
   templateUrl: './draw.component.html',
   styleUrls: ['./draw.component.css']
 })
-export class DrawComponent implements AfterViewInit  {
+export class DrawComponent implements AfterViewInit {
 
 
   @ViewChild('mapElement') mapElm: ElementRef;
@@ -52,7 +52,7 @@ export class DrawComponent implements AfterViewInit  {
           null,
           null,
           null,
-          new maps.Size(50, 50)
+          new maps.Size(70, 70)
         );
         this.drawingManager.setOptions({
           markerOptions: {
@@ -121,6 +121,13 @@ export class DrawComponent implements AfterViewInit  {
       case 'pan':
         this.drawingManager.setDrawingMode(null);
         break;
+      case 'save':
+        this.drawingManager.setDrawingMode(null);
+        this.map.data.toGeoJson(function (obj) {
+          console.log(JSON.stringify(obj));
+          console.log(obj);
+        });
+        break;
       default:
         this.drawingManager.setDrawingMode(null);
     }
@@ -128,7 +135,7 @@ export class DrawComponent implements AfterViewInit  {
 
   ngAfterViewInit(): void {
 
-    this.load.loadScript(url, 'gmap',() => {
+    this.load.loadScript(url, 'gmap', () => {
       const maps = window['google']['maps'];
       console.log(maps);
       const loc = new maps.LatLng(51.561638, -0.14);
@@ -160,49 +167,52 @@ export class DrawComponent implements AfterViewInit  {
       });
       this.drawingManager.setMap(this.map);
 
-    maps.event.addListener(this.drawingManager, 'overlaycomplete', function(event) {
-      console.log(event.type);
-      event.overlay.addListener('rightclick', function() {
-        event.overlay.setMap(null);
-      });
-      switch (event.type) {
-        case 'polygon':
-          this.map.data.add(new maps.Data.Feature({
-            geometry: new maps.Data.Polygon([event.overlay.getPath().getArray()])
-          }));
-          break;
-        case 'rectangle':
-          let b = event.overlay.getBounds(),
-            p = [b.getSouthWest(), {
-              lat: b.getSouthWest().lat(),
-              lng: b.getNorthEast().lng()
-            },
-              b.getNorthEast(), {
-                lng: b.getSouthWest().lng(),
-                lat: b.getNorthEast().lat()
+      maps.event.addListener(this.drawingManager, 'overlaycomplete', function (event) {
+        console.log(event.type);
+        event.overlay.addListener('rightclick', function () {
+          event.overlay.setMap(null);
+        });
+        switch (event.type) {
+          case 'polygon':
+            this.map.data.add(new maps.Data.Feature({
+              geometry: new maps.Data.Polygon([event.overlay.getPath().getArray()])
+            }));
+            break;
+          case 'rectangle':
+            let bounds = event.overlay.getBounds();
+            let points = [
+              bounds.getSouthWest(),
+              {
+                lat: bounds.getSouthWest().lat(),
+                lng: bounds.getNorthEast().lng()
+              },
+              bounds.getNorthEast(),
+              {
+                lng: bounds.getSouthWest().lng(),
+                lat: bounds.getNorthEast().lat()
               }
             ];
-          this.map.data.add(new maps.Data.Feature({
-            geometry: new maps.Data.Polygon([p])
-          }));
-          break;
-        case 'polyline':
-          this.map.data.add(new maps.Data.Feature({
-            geometry: new maps.Data.LineString(event.overlay.getPath().getArray())
-          }));
-          break;
-        case 'circle':
-          this.map.data.add(new maps.Data.Feature({
-            properties: {
-              radius: event.overlay.getRadius()
-            },
-            geometry: new maps.Data.Point(event.overlay.getCenter())
-          }));
-          break;
-        default:
-          console.log('end');
-      }
-    });
-  };
+            this.map.data.add(new maps.Data.Feature({
+              geometry: new maps.Data.Polygon([points])
+            }));
+            break;
+          case 'polyline':
+            this.map.data.add(new maps.Data.Feature({
+              geometry: new maps.Data.LineString(event.overlay.getPath().getArray())
+            }));
+            break;
+          case 'circle':
+            this.map.data.add(new maps.Data.Feature({
+              properties: {
+                radius: event.overlay.getRadius()
+              },
+              geometry: new maps.Data.Point(event.overlay.getCenter())
+            }));
+            break;
+          default:
+            console.log('end');
+        }
+      });
+    };
   }
 }
