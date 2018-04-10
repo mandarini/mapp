@@ -66,10 +66,10 @@ export class DrawComponent implements AfterViewInit  {
         this.drawingManager.setDrawingMode(this.maps.drawing.OverlayType.POLYGON);
         this.drawingManager.setOptions({
           polygonOptions: {
-            fillColor: '#000000',
+            fillColor: '#9c4d4f',
             fillOpacity: 0.5,
             strokeWeight: 2,
-            strokeColor: '#000000',
+            strokeColor: '#401619',
             clickable: true,
             editable: true,
             draggable: true
@@ -79,11 +79,11 @@ export class DrawComponent implements AfterViewInit  {
       case 'square':
         this.drawingManager.setDrawingMode(this.maps.drawing.OverlayType.RECTANGLE);
         this.drawingManager.setOptions({
-          polygonOptions: {
-            fillColor: '#000000',
+          rectangleOptions: {
+            fillColor: '#fff82e',
             fillOpacity: 0.5,
             strokeWeight: 2,
-            strokeColor: '#000000',
+            strokeColor: '#c8a535',
             clickable: true,
             editable: true,
             draggable: true
@@ -93,11 +93,25 @@ export class DrawComponent implements AfterViewInit  {
       case 'polyline':
         this.drawingManager.setDrawingMode(this.maps.drawing.OverlayType.POLYLINE);
         this.drawingManager.setOptions({
-          polygonOptions: {
-            fillColor: '#000000',
+          polylineOptions: {
+            fillColor: '#00b801',
             fillOpacity: 0.5,
             strokeWeight: 2,
-            strokeColor: '#000000',
+            strokeColor: '#00b801',
+            clickable: true,
+            editable: true,
+            draggable: true
+          }
+        });
+        break;
+      case 'circle':
+        this.drawingManager.setDrawingMode(this.maps.drawing.OverlayType.CIRCLE);
+        this.drawingManager.setOptions({
+          circleOptions: {
+            fillColor: '#00b801',
+            fillOpacity: 0.5,
+            strokeWeight: 2,
+            strokeColor: '#00b801',
             clickable: true,
             editable: true,
             draggable: true
@@ -146,21 +160,7 @@ export class DrawComponent implements AfterViewInit  {
 
       this.drawingManager = new this.maps.drawing.DrawingManager({
         drawingMode: null,
-        drawingControl: false, //i have my custom tools so i don't need the defaults to be displayed
-        circleOptions: {
-          fillColor: '#ffffff',
-          fillOpacity: 0.7,
-          strokeWeight: 2,
-          clickable: true,
-          editable: true,
-          zIndex: 1
-        },
-        rectangleOptions: {
-          strokeWeight: 1,
-          clickable: true,
-          editable: true,
-          draggable: true
-        }
+        drawingControl: false  // i have my custom tools so i don't need the defaults to be displayed
       });
       this.drawingManager.setMap(this.map);
     });
