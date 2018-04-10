@@ -7,13 +7,15 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './/app-routing.module';
 import { OlMapComponent } from './ol-map/ol-map.component';
 import { GMapComponent } from './g-map/g-map.component';
+import { DrawComponent } from './draw/draw.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     OlMapComponent,
-    GMapComponent
+    GMapComponent,
+    DrawComponent
   ],
   imports: [
     BrowserModule,
