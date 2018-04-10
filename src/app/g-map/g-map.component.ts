@@ -27,6 +27,7 @@ export class GMapComponent implements AfterViewInit {
   private maps: any;
   private coords: any;
   private markerCluster: any;
+  private infowindow: any;
   lettings: string[];
   masts: string[];
   markers: any[];
@@ -132,6 +133,16 @@ export class GMapComponent implements AfterViewInit {
           strokeWeight: 1
         };
       });
+
+      this.map.data.addListener('click', (function(e) {
+        console.log(e.latLng);
+        this.infowindow.setPosition(e.latLng);
+        this.infowindow.setContent(`<div class="overlay">
+        <p><b>Prevalence factor of Loneliness of those over the age of 65: </b>
+          ${e.feature.getProperty('PREVALENCE')}</p></div>`);
+        this.infowindow.open(this.map);
+      }).bind(this));
+      this.infowindow = new this.maps.InfoWindow();
 
       this.http.get('assets/letting.json').subscribe(data => {
         this.lettings = data['data'];

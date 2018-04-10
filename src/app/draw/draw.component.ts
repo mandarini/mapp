@@ -23,20 +23,20 @@ export class DrawComponent implements AfterViewInit  {
   private map: any;
   private maps: any;
   private drawingManager: any;
-  private coords: any;
 
   constructor(private load: ScriptLoadService) {
   }
 
   draw(type) {
+    const maps = window['google']['maps'];
     switch (type) {
       case 'marker':
-        this.drawingManager.setDrawingMode(this.maps.drawing.OverlayType.MARKER);
-        let point = new this.maps.MarkerImage('assets/point.png',
+        this.drawingManager.setDrawingMode(maps.drawing.OverlayType.MARKER);
+        let point = new window['google']['maps'].MarkerImage('assets/point.png',
           null,
           null,
           null,
-          new this.maps.Size(30, 30)
+          new maps.Size(30, 30)
         );
         this.drawingManager.setOptions({
           markerOptions: {
@@ -47,12 +47,12 @@ export class DrawComponent implements AfterViewInit  {
         });
         break;
       case 'cat':
-        this.drawingManager.setDrawingMode(this.maps.drawing.OverlayType.MARKER);
-        let cat = new this.maps.MarkerImage('assets/cat.png',
+        this.drawingManager.setDrawingMode(maps.drawing.OverlayType.MARKER);
+        let cat = new maps.MarkerImage('assets/cat.png',
           null,
           null,
           null,
-          new this.maps.Size(50, 50)
+          new maps.Size(50, 50)
         );
         this.drawingManager.setOptions({
           markerOptions: {
@@ -63,7 +63,7 @@ export class DrawComponent implements AfterViewInit  {
         });
         break;
       case 'polygon':
-        this.drawingManager.setDrawingMode(this.maps.drawing.OverlayType.POLYGON);
+        this.drawingManager.setDrawingMode(maps.drawing.OverlayType.POLYGON);
         this.drawingManager.setOptions({
           polygonOptions: {
             fillColor: '#9c4d4f',
@@ -77,7 +77,7 @@ export class DrawComponent implements AfterViewInit  {
         });
         break;
       case 'square':
-        this.drawingManager.setDrawingMode(this.maps.drawing.OverlayType.RECTANGLE);
+        this.drawingManager.setDrawingMode(maps.drawing.OverlayType.RECTANGLE);
         this.drawingManager.setOptions({
           rectangleOptions: {
             fillColor: '#fff82e',
@@ -91,7 +91,7 @@ export class DrawComponent implements AfterViewInit  {
         });
         break;
       case 'polyline':
-        this.drawingManager.setDrawingMode(this.maps.drawing.OverlayType.POLYLINE);
+        this.drawingManager.setDrawingMode(maps.drawing.OverlayType.POLYLINE);
         this.drawingManager.setOptions({
           polylineOptions: {
             fillColor: '#00b801',
@@ -105,7 +105,7 @@ export class DrawComponent implements AfterViewInit  {
         });
         break;
       case 'circle':
-        this.drawingManager.setDrawingMode(this.maps.drawing.OverlayType.CIRCLE);
+        this.drawingManager.setDrawingMode(maps.drawing.OverlayType.CIRCLE);
         this.drawingManager.setOptions({
           circleOptions: {
             fillColor: '#00b801',
@@ -129,17 +129,13 @@ export class DrawComponent implements AfterViewInit  {
   ngAfterViewInit(): void {
 
     this.load.loadScript(url, 'gmap',() => {
-      this.maps = window['google']['maps'];
-      console.log(this.maps);
-      const loc = new this.maps.LatLng(51.561638, -0.14);
+      const maps = window['google']['maps'];
+      console.log(maps);
+      const loc = new maps.LatLng(51.561638, -0.14);
 
-      const darkmap = new this.maps.StyledMapType(styledMap, {name: 'Dark Map'});
+      const darkmap = new maps.StyledMapType(styledMap, {name: 'Dark Map'});
 
-      this.coords = function (x, y) {
-        return new this.maps.LatLng(x, y);
-      };
-
-      this.map = new this.maps.Map(this.mapElm.nativeElement, {
+      this.map = new maps.Map(this.mapElm.nativeElement, {
         zoom: 11,
         center: loc,
         scrollwheel: true,
@@ -149,20 +145,64 @@ export class DrawComponent implements AfterViewInit  {
         streetViewControl: false,
         scaleControl: true,
         zoomControlOptions: {
-          style: this.maps.ZoomControlStyle.LARGE,
-          position: this.maps.ControlPosition.RIGHT_BOTTOM
+          style: maps.ZoomControlStyle.LARGE,
+          position: maps.ControlPosition.RIGHT_BOTTOM
         }
       });
       this.map.mapTypes.set('dark_map', darkmap);
       this.map.setMapTypeId('dark_map');
       const drawControl = document.getElementById('draw-buttons');
-      this.map.controls[this.maps.ControlPosition.TOP_LEFT].push(drawControl);
+      this.map.controls[maps.ControlPosition.TOP_LEFT].push(drawControl);
 
-      this.drawingManager = new this.maps.drawing.DrawingManager({
+      this.drawingManager = new maps.drawing.DrawingManager({
         drawingMode: null,
         drawingControl: false  // i have my custom tools so i don't need the defaults to be displayed
       });
       this.drawingManager.setMap(this.map);
+
+    maps.event.addListener(this.drawingManager, 'overlaycomplete', function(event) {
+      console.log(event.type);
+      event.overlay.addListener('rightclick', function() {
+        event.overlay.setMap(null);
+      });
+      switch (event.type) {
+        case 'polygon':
+          this.map.data.add(new maps.Data.Feature({
+            geometry: new maps.Data.Polygon([event.overlay.getPath().getArray()])
+          }));
+          break;
+        case 'rectangle':
+          let b = event.overlay.getBounds(),
+            p = [b.getSouthWest(), {
+              lat: b.getSouthWest().lat(),
+              lng: b.getNorthEast().lng()
+            },
+              b.getNorthEast(), {
+                lng: b.getSouthWest().lng(),
+                lat: b.getNorthEast().lat()
+              }
+            ];
+          this.map.data.add(new maps.Data.Feature({
+            geometry: new maps.Data.Polygon([p])
+          }));
+          break;
+        case 'polyline':
+          this.map.data.add(new maps.Data.Feature({
+            geometry: new maps.Data.LineString(event.overlay.getPath().getArray())
+          }));
+          break;
+        case 'circle':
+          this.map.data.add(new maps.Data.Feature({
+            properties: {
+              radius: event.overlay.getRadius()
+            },
+            geometry: new maps.Data.Point(event.overlay.getCenter())
+          }));
+          break;
+        default:
+          console.log('end');
+      }
     });
+  };
   }
 }

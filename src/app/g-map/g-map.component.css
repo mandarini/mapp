@@ -17,3 +17,7 @@ button {
 .hide {
   display: none;
 }
+
+.overlay {
+  max-width: 200px;
+}
