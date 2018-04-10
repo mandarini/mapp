@@ -213,6 +213,6 @@ export class DrawComponent implements AfterViewInit {
             console.log('end');
         }
       });
-    };
+    });
   }
 }
