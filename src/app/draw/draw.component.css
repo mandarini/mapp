@@ -3,3 +3,19 @@
   width: 100%;
   height: 90vh;
 }
+
+#draw-buttons {
+  display: flex;
+  flex-direction: row;
+}
+
+#draw-buttons img {
+  background-color: #eeebe0;
+  margin: 5px;
+  border-radius: 5px;
+  box-shadow: 10px 5px 5px #c5c5c5;
+  padding: 5px;
+  height: 30px;
+  width: auto;
+  cursor: pointer;
+}

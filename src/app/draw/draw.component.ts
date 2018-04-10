@@ -6,7 +6,7 @@ import { styledMap } from '../../assets/mapStylingMaterial/styledMap';
 import { customGradient } from '../../assets/mapStylingMaterial/gradient';
 
 const your_API_key = 'AIzaSyAwVnwE1bEZf_Bkk_pSkGM0XlBSXJocVUY';
-const url = 'https://maps.googleapis.com/maps/api/js?key=' + your_API_key + '&libraries=visualization';
+const url = 'https://maps.googleapis.com/maps/api/js?key=' + your_API_key + '&libraries=drawing';
 
 @Component({
   selector: 'app-draw',
@@ -21,44 +21,111 @@ export class DrawComponent implements AfterViewInit  {
   @ViewChild('info') infoBox: ElementRef;
 
   private map: any;
+  private maps: any;
+  private drawingManager: any;
   private coords: any;
-  lettings: string[];
-  masts: string[];
 
-  constructor(private load: ScriptLoadService, private http: HttpClient) {
+  constructor(private load: ScriptLoadService) {
   }
 
-  city(city) {
-    if (city === 'lon') {
-      this.map.setCenter(this.coords(51.561638, -0.14));
-    }
-    if (city === 'man') {
-      this.map.setCenter(this.coords(53.52476717517185, -2.5434842249308414));
-    }
-  }
-
-  changeType(type) {
-    if (type === 'dark') {
-      this.map.setMapTypeId('dark_map');
-    } else {
-      this.map.setMapTypeId('roadmap');
+  draw(type) {
+    switch (type) {
+      case 'marker':
+        this.drawingManager.setDrawingMode(this.maps.drawing.OverlayType.MARKER);
+        let point = new this.maps.MarkerImage('assets/point.png',
+          null,
+          null,
+          null,
+          new this.maps.Size(30, 30)
+        );
+        this.drawingManager.setOptions({
+          markerOptions: {
+            icon: point,
+            clickable: true,
+            draggable: true
+          }
+        });
+        break;
+      case 'cat':
+        this.drawingManager.setDrawingMode(this.maps.drawing.OverlayType.MARKER);
+        let cat = new this.maps.MarkerImage('assets/cat.png',
+          null,
+          null,
+          null,
+          new this.maps.Size(50, 50)
+        );
+        this.drawingManager.setOptions({
+          markerOptions: {
+            icon: cat,
+            clickable: true,
+            draggable: true
+          }
+        });
+        break;
+      case 'polygon':
+        this.drawingManager.setDrawingMode(this.maps.drawing.OverlayType.POLYGON);
+        this.drawingManager.setOptions({
+          polygonOptions: {
+            fillColor: '#000000',
+            fillOpacity: 0.5,
+            strokeWeight: 2,
+            strokeColor: '#000000',
+            clickable: true,
+            editable: true,
+            draggable: true
+          }
+        });
+        break;
+      case 'square':
+        this.drawingManager.setDrawingMode(this.maps.drawing.OverlayType.RECTANGLE);
+        this.drawingManager.setOptions({
+          polygonOptions: {
+            fillColor: '#000000',
+            fillOpacity: 0.5,
+            strokeWeight: 2,
+            strokeColor: '#000000',
+            clickable: true,
+            editable: true,
+            draggable: true
+          }
+        });
+        break;
+      case 'polyline':
+        this.drawingManager.setDrawingMode(this.maps.drawing.OverlayType.POLYLINE);
+        this.drawingManager.setOptions({
+          polygonOptions: {
+            fillColor: '#000000',
+            fillOpacity: 0.5,
+            strokeWeight: 2,
+            strokeColor: '#000000',
+            clickable: true,
+            editable: true,
+            draggable: true
+          }
+        });
+        break;
+      case 'pan':
+        this.drawingManager.setDrawingMode(null);
+        break;
+      default:
+        this.drawingManager.setDrawingMode(null);
     }
   }
 
   ngAfterViewInit(): void {
 
     this.load.loadScript(url, 'gmap',() => {
-      const maps = window['google']['maps'];
-      console.log(maps);
-      const loc = new maps.LatLng(51.561638, -0.14);
+      this.maps = window['google']['maps'];
+      console.log(this.maps);
+      const loc = new this.maps.LatLng(51.561638, -0.14);
 
-      const darkmap = new maps.StyledMapType(styledMap, {name: 'Dark Map'});
+      const darkmap = new this.maps.StyledMapType(styledMap, {name: 'Dark Map'});
 
       this.coords = function (x, y) {
-        return new maps.LatLng(x, y);
+        return new this.maps.LatLng(x, y);
       };
 
-      this.map = new maps.Map(this.mapElm.nativeElement, {
+      this.map = new this.maps.Map(this.mapElm.nativeElement, {
         zoom: 11,
         center: loc,
         scrollwheel: true,
@@ -68,73 +135,34 @@ export class DrawComponent implements AfterViewInit  {
         streetViewControl: false,
         scaleControl: true,
         zoomControlOptions: {
-          style: maps.ZoomControlStyle.LARGE,
-          position: maps.ControlPosition.RIGHT_BOTTOM
+          style: this.maps.ZoomControlStyle.LARGE,
+          position: this.maps.ControlPosition.RIGHT_BOTTOM
         }
       });
       this.map.mapTypes.set('dark_map', darkmap);
       this.map.setMapTypeId('dark_map');
+      const drawControl = document.getElementById('draw-buttons');
+      this.map.controls[this.maps.ControlPosition.TOP_LEFT].push(drawControl);
 
-      const locControl = document.getElementById('location-buttons');
-      this.map.controls[maps.ControlPosition.TOP_CENTER].push(locControl);
-
-      this.map.data.loadGeoJson('assets/lonely.geojson');
-      this.map.data.addListener('mouseover', (function(e) {
-        this.legend.nativeElement.style.display = 'block';
-        this.infoBox.nativeElement.innerText = e.feature.getProperty('PREVALENCE');
-      }).bind(this));
-      this.map.data.addListener('mouseout', (function(e) {
-        this.legend.nativeElement.style.display = 'none';
-      }).bind(this));
-      this.map.data.setStyle(function(feature) {
-        const lon = feature.getProperty('PREVALENCE');
-        const value = 255 - Math.round(mapNumber(lon, 0, 5, 0, 255));
-        const color = 'rgb(' + value + ',' + value + ',' + 0 + ')';
-        return {
-          fillColor: color,
-          strokeWeight: 1
-        };
+      this.drawingManager = new this.maps.drawing.DrawingManager({
+        drawingMode: null,
+        drawingControl: false, //i have my custom tools so i don't need the defaults to be displayed
+        circleOptions: {
+          fillColor: '#ffffff',
+          fillOpacity: 0.7,
+          strokeWeight: 2,
+          clickable: true,
+          editable: true,
+          zIndex: 1
+        },
+        rectangleOptions: {
+          strokeWeight: 1,
+          clickable: true,
+          editable: true,
+          draggable: true
+        }
       });
-
-      this.http.get('assets/letting.json').subscribe(data => {
-        this.lettings = data['data'];
-        const heatmapData = [];
-        this.lettings.map(x => {
-          heatmapData.push({
-            location: new maps.LatLng(x[24], x[23]),
-            weight: parseInt(x[15], 10)
-          });
-        });
-        const heatmap = new maps.visualization.HeatmapLayer({
-          data: heatmapData
-        });
-
-        heatmap.set('gradient', customGradient);
-        heatmap.set('radius', 70);
-        heatmap.set('opacity', 1);
-        heatmap.setMap(this.map);
-      });
-
-      const antenna = new maps.MarkerImage('assets/antennabl.png',
-        null,
-        null,
-        null,
-        new maps.Size(25, 40)
-      );
-
-      this.http.get('assets/masts.json').subscribe(data => {
-        this.masts = data['data'];
-        console.log(this.masts[0][17]); // longitude
-        console.log(this.masts[0][18]); // latitude
-
-        this.masts.map(x => {
-          new maps.Marker({
-            position: new maps.LatLng(x[18], x[17]),
-            icon: antenna,
-            // map: this.map
-          });
-        });
-      });
+      this.drawingManager.setMap(this.map);
     });
   }
 }
