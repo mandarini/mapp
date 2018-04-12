@@ -15,7 +15,6 @@ const url = 'https://maps.googleapis.com/maps/api/js?key=' + your_API_key + '&li
 })
 export class DrawComponent implements AfterViewInit {
 
-
   @ViewChild('mapElement') mapElm: ElementRef;
   @ViewChild('legend') legend: ElementRef;
   @ViewChild('info') infoBox: ElementRef;
