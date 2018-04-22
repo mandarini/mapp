@@ -167,7 +167,7 @@ export class DrawComponent implements AfterViewInit {
       this.drawingManager.setMap(this.map);
 
       maps.event.addListener(this.drawingManager, 'overlaycomplete', function (event) {
-        console.log(event.type);
+        // console.log(event.type);
         event.overlay.addListener('rightclick', function () {
           event.overlay.setMap(null);
         });

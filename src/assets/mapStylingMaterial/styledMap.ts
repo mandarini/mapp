@@ -112,8 +112,8 @@ export const styledMap =
     {
       featureType: 'water',
       elementType: 'geometry.fill',
-      stylers: [{color: '#222222'}]
-      // stylers: [{color: '#00ff00'}]
+      // stylers: [{color: '#222222'}]
+      stylers: [{color: '#ff00ff'}]
     },
     {
       featureType: 'water',

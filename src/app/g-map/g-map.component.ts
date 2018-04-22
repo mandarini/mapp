@@ -160,7 +160,7 @@ export class GMapComponent implements AfterViewInit {
         heatmap.set('gradient', customGradient);
         heatmap.set('radius', 70);
         heatmap.set('opacity', 1);
-        heatmap.setMap(this.map);
+        // heatmap.setMap(this.map);
       });
 
       const antenna = new this.maps.MarkerImage('assets/antennabl.png',
