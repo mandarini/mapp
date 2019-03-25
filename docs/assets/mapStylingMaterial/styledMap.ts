@@ -1,6 +1,7 @@
 export const styledMap =
   [
     {elementType: 'geometry', stylers: [{color: '#9a9a9a'}]},
+    // {elementType: 'geometry', stylers: [{color: '#0000ff'}]},
     {elementType: 'labels.text.fill', stylers: [{color: '#111111'}]},
     {elementType: 'labels.text.stroke', stylers: [{visibility: 'off'}]},
     {
@@ -22,6 +23,7 @@ export const styledMap =
       featureType: 'landscape.natural',
       elementType: 'geometry',
       stylers: [{color: '#c8c8c8'}]
+      // stylers: [{color: '#00ffff'}]
     },
     {
       featureType: 'poi',
@@ -53,16 +55,19 @@ export const styledMap =
       featureType: 'road',
       elementType: 'geometry',
       stylers: [{color: '#aaaaaa'}]
+      // stylers: [{color: '#ff0000'}]
     },
     {
       featureType: 'road.arterial',
       elementType: 'geometry',
       stylers: [{color: '#999999'}]
+      // stylers: [{color: '#ff0000'}]
     },
     {
       featureType: 'road.highway',
       elementType: 'geometry',
       stylers: [{color: '#666666'}]
+      // stylers: [{color: '#ff0000'}]
     },
     {
       featureType: 'road.highway',
@@ -107,7 +112,8 @@ export const styledMap =
     {
       featureType: 'water',
       elementType: 'geometry.fill',
-      stylers: [{color: '#222222'}]
+      // stylers: [{color: '#222222'}]
+      stylers: [{color: '#ff00ff'}]
     },
     {
       featureType: 'water',
